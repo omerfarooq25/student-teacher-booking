@@ -11,9 +11,20 @@
         <input type="text" placeholder="Name" id="name" required><br>
         <input type="email" placeholder="Email" id="email" required><br>
         <input type="password" placeholder="Password" id="password" required><br>
+
+        <!-- Role Dropdown -->
+        <label for="role">Role:</label>
+        <select id="role" required>
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+        </select><br>
+
         <button type="submit">Register</button>
     </form>
-    <script src="register.js"></script>
+
+    <script type="module" src="register.js"></script>
 </body>
 
 </html>

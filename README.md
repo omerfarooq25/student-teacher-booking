@@ -56,10 +56,6 @@ student-teacher-booking/
 ├── README.md
 └── package.json
 
-yaml
-Copy
-Edit
-
 ---
 
 ## ⚙️ Installation & Setup
@@ -69,10 +65,8 @@ Edit
    cd student-teacher-booking
 Install dependencies (if using npm)
 
-bash
-Copy
-Edit
 npm install
+
 Set up Firebase
 
 Go to Firebase Console
@@ -91,9 +85,6 @@ Right-click on index.html → Open with Live Server
 
 Deploy (planned for later)
 
-bash
-Copy
-Edit
 firebase deploy
 📅 Project Progress
 Day 1 → Firebase Auth, Registration, Login, Role-based redirection ✅
@@ -104,15 +95,6 @@ Upcoming → Teacher dashboard, Student dashboard, booking system, chat
 
 📜 License
 This project is open-source under the MIT License.
-
-yaml
-Copy
-Edit
-
----
-
-### **Next Step**
-1. Save this file as `README.md` in the root of your project.  
 2. Commit & push:
 ```bash
 git add README.md

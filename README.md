@@ -93,9 +93,11 @@ Day 1 → Firebase Auth, Registration, Login, Role-based redirection ✅
 
 Day 2 → Admin dashboard development 
 
-Day 3 → Student & Teacher dashboard connected to Firestore, booking system implemented with real-time sync ✅  
+Day 3 → Student & Teacher dashboard connected to Firestore, booking system implemented with real-time sync ✅
 
-Upcoming → Booking restrictions, appointment filtering, admin panel, chat 🔜
+Day 4 → Restricted unapproved students, teacher-specific appointments, status controls ✅
+
+Upcoming → Slot conflict check, live chat system, Firebase hosting 🔜
 
 📜 License
 This project is open-source under the MIT License.

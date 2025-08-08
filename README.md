@@ -23,7 +23,7 @@ A web-based booking system that allows students to schedule appointments with te
 **Version Control:** GitHub  
 
 ---
-
+'''bash
 ## 📂 Folder Structure
 student-teacher-booking/
 ├── public/

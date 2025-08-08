@@ -1,14 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8" />
     <title>Teacher Dashboard</title>
-    <link rel="stylesheet" href="teacher.css">
+    <link rel="stylesheet" href="teacher.css" />
 </head>
 
 <body>
-    <h1>Teacher Dashboard</h1>
-    <script src="dashboard.js"></script>
+    <h2>Welcome, Teacher 👩‍🏫</h2>
+
+    <section>
+        <h3>📥 Appointment Requests</h3>
+        <table id="appointmentsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Requested At</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script type="module" src="dashboard.js"></script>
 </body>
 
 </html>

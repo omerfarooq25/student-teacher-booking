@@ -1,3 +1,24 @@
-h1 {
-    color: maroon;
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h2 {
+    color: #333;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 30px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 8px 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f3f3f3;
 }

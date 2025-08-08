@@ -23,12 +23,35 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
+
+    const userDoc = await getDocs(
+      query(collection(db, "users"), where("__name__", "==", user.uid))
+    );
+
+    let approved = false;
+    userDoc.forEach((docSnap) => {
+      const data = docSnap.data();
+      approved = data.approved || false;
+    });
+
+    if (!approved) {
+      document.getElementById("teachersSection").innerHTML = `
+        <p style="color: red; font-weight: bold;">
+          Your account is awaiting admin approval. Booking is disabled.
+        </p>
+      `;
+      document.getElementById("appointmentsSection").innerHTML = "";
+      return;
+    }
+
+    // Load normal dashboard
     await loadTeachers();
     await loadAppointments();
   } else {
     window.location.href = "../auth/login.html";
   }
 });
+
 
 async function loadTeachers() {
   const q = query(collection(db, "users"), where("role", "==", "teacher"));

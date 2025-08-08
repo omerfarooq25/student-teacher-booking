@@ -2,15 +2,8 @@ console.log("Teacher dashboard loaded");
 
 import { auth, db } from "../firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  updateDoc,
-  getDoc,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { collection,query,where,getDocs,doc,updateDoc,getDoc,} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const appointmentsTable = document
   .getElementById("appointmentsTable")
@@ -58,6 +51,10 @@ async function loadAppointments() {
       <td>
         ${
           appointment.status === "pending"
+            ? "🟡 Pending"
+            : appointment.status === "accepted"
+            ? "🟢 Accepted"
+            : "🔴 Rejected"
             ? `
             <button onclick="updateStatus('${docSnap.id}', 'accepted')">✅ Accept</button>
             <button onclick="updateStatus('${docSnap.id}', 'rejected')">❌ Reject</button>`
@@ -73,3 +70,11 @@ window.updateStatus = async (appointmentId, status) => {
   await updateDoc(doc(db, "appointments", appointmentId), { status });
   loadAppointments();
 };
+
+
+// Update your query:
+const q = query(
+  collection(db, "appointments"),
+  where("teacherId", "==", currentUser.uid),
+  orderBy("timestamp", "desc")
+);

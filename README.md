@@ -88,11 +88,14 @@ Deploy (planned for later)
 
 firebase deploy
 📅 Project Progress
+
 Day 1 → Firebase Auth, Registration, Login, Role-based redirection ✅
 
-Day 2 → Admin dashboard development 🔄
+Day 2 → Admin dashboard development 
 
-Upcoming → Teacher dashboard, Student dashboard, booking system, chat
+Day 3 → Student & Teacher dashboard connected to Firestore, booking system implemented with real-time sync ✅  
+
+Upcoming → Booking restrictions, appointment filtering, admin panel, chat 🔜
 
 📜 License
 This project is open-source under the MIT License.

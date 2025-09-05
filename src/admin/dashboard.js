@@ -69,3 +69,16 @@ window.deleteUser = async (uid) => {
     loadUsers();
   }
 };
+
+import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Ensure logout only happens on button click
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    alert("Logged out successfully!");
+    window.location.href = "../auth/login.html";
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+});

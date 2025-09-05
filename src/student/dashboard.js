@@ -1,7 +1,13 @@
 console.log("Student dashboard loaded");
 
 import { auth, db } from "../firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+// expose auth for debugging in console
+window.auth = auth;
+
+import {
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   collection,
   query,
@@ -9,8 +15,13 @@ import {
   getDocs,
   addDoc,
   Timestamp,
+  doc,
+  getDoc,
+  onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { showMessage } from "../utils/notification.js";
 
+// 🔹 Table references
 const teachersTable = document
   .getElementById("teachersTable")
   .querySelector("tbody");
@@ -18,42 +29,51 @@ const appointmentsTable = document
   .getElementById("appointmentsTable")
   .querySelector("tbody");
 
-let currentUser = null;
+// 🔹 Section references (used for show/hide instead of overwriting HTML)
+const teachersSection = document.getElementById("teachersSection");
+const appointmentsSection = document.getElementById("appointmentsSection");
 
-onAuthStateChanged(auth, async (user) => {
+// 🔹 Track current student UID
+let currentStudentUid = null;
+
+// 🔹 Auth state listener
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUser = user;
+    console.log("DEBUG: Logged-in user object:", user);
+    console.log("DEBUG: UID:", user.uid);
 
-    const userDoc = await getDocs(
-      query(collection(db, "users"), where("__name__", "==", user.uid))
-    );
+    currentStudentUid = user.uid;
+    const userRef = doc(db, "users", user.uid);
 
-    let approved = false;
-    userDoc.forEach((docSnap) => {
-      const data = docSnap.data();
-      approved = data.approved || false;
+    // Real-time listener for approval updates
+    onSnapshot(userRef, (userSnap) => {
+      console.log("DEBUG: userSnap.exists:", userSnap.exists());
+      console.log("DEBUG: userSnap.id:", userSnap.id);
+      console.log("DEBUG: userSnap.data():", userSnap.data());
+
+      if (!userSnap.exists() || !userSnap.data().approved) {
+        // ❌ Not approved yet → hide sections
+        teachersSection.style.display = "none";
+        appointmentsSection.style.display = "none";
+        showMessage("⏳ Your account is awaiting admin approval.", "info");
+      } else {
+        // ✅ Approved → show dashboard
+        teachersSection.style.display = "block";
+        appointmentsSection.style.display = "block";
+
+        console.log("✅ Student approved in real time:", userSnap.data());
+
+        loadTeachers(user.uid);
+        loadAppointments(user.uid);
+      }
     });
-
-    if (!approved) {
-      document.getElementById("teachersSection").innerHTML = `
-        <p style="color: red; font-weight: bold;">
-          Your account is awaiting admin approval. Booking is disabled.
-        </p>
-      `;
-      document.getElementById("appointmentsSection").innerHTML = "";
-      return;
-    }
-
-    // Load normal dashboard
-    await loadTeachers();
-    await loadAppointments();
   } else {
     window.location.href = "../auth/login.html";
   }
 });
 
-
-async function loadTeachers() {
+// 🔹 Load teachers list
+async function loadTeachers(studentUid) {
   const q = query(collection(db, "users"), where("role", "==", "teacher"));
   const snapshot = await getDocs(q);
 
@@ -65,30 +85,54 @@ async function loadTeachers() {
     row.innerHTML = `
       <td>${teacher.name}</td>
       <td>${teacher.email}</td>
-      <td><button onclick="bookAppointment('${docSnap.id}', '${teacher.name}')">Book</button></td>
+      <td>
+        <button onclick="bookAppointment('${docSnap.id}', '${teacher.name}', '${studentUid}')">
+          Book
+        </button>
+      </td>
     `;
     teachersTable.appendChild(row);
   });
 }
 
-window.bookAppointment = async (teacherId, teacherName) => {
+// 🔹 Book appointment
+window.bookAppointment = async (teacherId, teacherName, studentUid) => {
   if (!confirm(`Book appointment with ${teacherName}?`)) return;
 
+  // Prevent duplicate bookings
+  const q = query(
+    collection(db, "appointments"),
+    where("studentId", "==", studentUid),
+    where("teacherId", "==", teacherId),
+    where("status", "in", ["pending", "accepted"])
+  );
+  const existing = await getDocs(q);
+
+  if (!existing.empty) {
+    showMessage(
+      "❌ You already have a pending/approved appointment with this teacher!",
+      "error"
+    );
+    return;
+  }
+
+  // Create new appointment
   await addDoc(collection(db, "appointments"), {
-    studentId: currentUser.uid,
+    studentId: studentUid,
     teacherId,
     status: "pending",
     timestamp: Timestamp.now(),
   });
 
-  alert("Appointment requested!");
-  loadAppointments();
+  showMessage("✅ Appointment requested!", "success");
+  loadAppointments(studentUid);
 };
 
-async function loadAppointments() {
+// 🔹 Load appointments
+async function loadAppointments(studentUid) {
   const q = query(
     collection(db, "appointments"),
-    where("studentId", "==", currentUser.uid)
+    where("studentId", "==", studentUid)
   );
   const snapshot = await getDocs(q);
 
@@ -98,23 +142,37 @@ async function loadAppointments() {
     const appointment = docSnap.data();
 
     // Get teacher info
-    const teacherDoc = await getDocs(
-      query(
-        collection(db, "users"),
-        where("__name__", "==", appointment.teacherId)
-      )
-    );
-    let teacherName = "Unknown";
-    teacherDoc.forEach((t) => {
-      teacherName = t.data().name;
-    });
+    const teacherDoc = await getDoc(doc(db, "users", appointment.teacherId));
+    const teacherName = teacherDoc.exists()
+      ? teacherDoc.data().name
+      : "Unknown";
 
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${teacherName}</td>
-      <td>${appointment.status}</td>
+      <td>
+        ${
+          appointment.status === "pending"
+            ? "🟡 Pending"
+            : appointment.status === "accepted"
+            ? "🟢 Accepted"
+            : "🔴 Rejected"
+        }
+      </td>
       <td>${appointment.timestamp.toDate().toLocaleString()}</td>
     `;
     appointmentsTable.appendChild(row);
   }
 }
+
+// 🔹 Logout button
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    showMessage("👋 Logged out successfully!", "success");
+    setTimeout(() => (window.location.href = "../auth/login.html"), 1000);
+  } catch (error) {
+    console.error("Logout failed:", error);
+    showMessage("❌ Logout failed", "error");
+  }
+});

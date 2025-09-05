@@ -4,12 +4,19 @@ import {
   doc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { showMessage } from "../utils/notification.js";
 
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    showMessage("❌ Invalid email format.", "error");
+    return;
+  }
 
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -37,7 +44,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       alert("No role assigned to this account.");
     }
   } catch (error) {
-    alert(error.message);
+    showMessage(` ❌ ${error.message}`, "error");
     console.error(error);
   }
 });

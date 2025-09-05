@@ -2,7 +2,15 @@ console.log("Teacher dashboard loaded");
 
 import { auth, db } from "../firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { collection,query,where,getDocs,doc,updateDoc,getDoc,} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const appointmentsTable = document
@@ -17,7 +25,7 @@ onAuthStateChanged(auth, async (user) => {
 
     if (userDoc.exists() && userDoc.data().role === "teacher") {
       currentUser = user;
-      await loadAppointments();
+      await loadAppointments(user.uid);
     } else {
       alert("Access denied!");
       window.location.href = "../auth/login.html";
@@ -27,10 +35,12 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-async function loadAppointments() {
+async function loadAppointments(teacherId) {
   const q = query(
     collection(db, "appointments"),
-    where("teacherId", "==", currentUser.uid)
+    where("teacherId", "==", teacherId),
+    // 💡 Order by timestamp to show newest requests first
+    orderBy("timestamp", "desc")
   );
   const snapshot = await getDocs(q);
 
@@ -55,6 +65,11 @@ async function loadAppointments() {
             : appointment.status === "accepted"
             ? "🟢 Accepted"
             : "🔴 Rejected"
+        }
+      </td>
+      <td>
+        ${
+          appointment.status === "pending"
             ? `
             <button onclick="updateStatus('${docSnap.id}', 'accepted')">✅ Accept</button>
             <button onclick="updateStatus('${docSnap.id}', 'rejected')">❌ Reject</button>`
@@ -68,13 +83,18 @@ async function loadAppointments() {
 
 window.updateStatus = async (appointmentId, status) => {
   await updateDoc(doc(db, "appointments", appointmentId), { status });
-  loadAppointments();
+  // 💡 Reload appointments for the current user after updating
+  loadAppointments(currentUser.uid);
 };
 
+import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// Update your query:
-const q = query(
-  collection(db, "appointments"),
-  where("teacherId", "==", currentUser.uid),
-  orderBy("timestamp", "desc")
-);
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    alert("Logged out successfully!");
+    window.location.href = "../auth/login.html";
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+});

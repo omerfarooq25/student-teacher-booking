@@ -8,11 +8,16 @@ A web-based booking system that allows students to schedule appointments with te
 - ✅ Firebase Authentication (Email/Password)
 - ✅ Role-based login & redirection (Admin, Teacher, Student)
 - ✅ Registration with Firestore role storage
-- 🔄 Admin dashboard for managing users (coming soon)
-- 🔄 Teacher dashboard for managing bookings (coming soon)
-- 🔄 Student dashboard for making bookings (coming soon)
+- ✅ Admin dashboard for managing users
+- ✅ Teacher dashboard for managing bookings
+- ✅ Student dashboard for making bookings
+- ✅ Real-time updates for teacher & student dashboards
+- ✅ CRUD operations for appointments (add, update, fetch)
+- ✅ Appointment accept/reject functionality for teachers
+- ✅ Null checks & error handling for authentication
 - 🔄 Slot conflict detection (planned)
 - 🔄 Live chat & notifications (planned)
+- 🔄 Firebase Hosting (planned)
 
 ---
 
@@ -49,6 +54,7 @@ student-teacher-booking/
 │ │ ├── student.css
 │ ├── utils/
 │ │ ├── logger.js
+│ │ ├── notification.js
 │ │ ├── validation.js
 │ ├── firebase.js
 │ └── main.js
@@ -64,30 +70,30 @@ student-teacher-booking/
    ```bash
    git clone https://github.com/YOUR-USERNAME/student-teacher-booking.git
    cd student-teacher-booking
-Install dependencies (if using npm)
+2. **Install dependencies (if using npm)**
 
-npm install
+`npm install`
 
-Set up Firebase
+• Set up Firebase
 
-Go to Firebase Console
+• Go to Firebase Console
 
-Create a new project
+• Create a new project
 
-Enable Authentication (Email/Password)
+• Enable Authentication (Email/Password)
 
-Enable Firestore Database
+• Enable Firestore Database
 
-Add your Firebase config to src/firebase.js
+• Add your Firebase config to `src/firebase.js`
 
-Run locally using VS Code Live Server
+• Run locally using VS Code Live Server
 
-Right-click on index.html → Open with Live Server
+• Right-click on `index.html` → Open with Live Server
 
-Deploy (planned for later)
+• Deploy (planned for later)
 
-firebase deploy
-📅 Project Progress
+`firebase deploy`
+## 📅 Project Progress
 
 Day 1 → Firebase Auth, Registration, Login, Role-based redirection ✅
 
@@ -97,9 +103,25 @@ Day 3 → Student & Teacher dashboard connected to Firestore, booking system imp
 
 Day 4 → Restricted unapproved students, teacher-specific appointments, status controls ✅
 
-Upcoming → Slot conflict check, live chat system, Firebase hosting 🔜
+Day 5+ →
 
-📜 License
+• Added null checks in auth to prevent dashboard errors✅
+
+• Teacher & Student dashboards improved with real-time updates✅
+
+• CRUD operations for appointments added (add, update, fetch)✅
+
+• Sorted teacher appointments by date✅
+
+• Appointment accept/reject functionality implemented for teachers ✅
+
+• Error handling and debugging improvements✅
+
+• Exposed auth/db for console debugging✅
+
+🔜 Upcoming → Slot conflict check, live chat system, Firebase hosting 🔜
+
+## 📜 License
 This project is open-source under the MIT License.
 2. Commit & push:
 ```bash

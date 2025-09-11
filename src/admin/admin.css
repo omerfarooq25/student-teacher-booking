@@ -1,3 +1,16 @@
+/* Block/Unblock buttons */
+button.block {
+    background-color: #f44336;
+}
+button.block:hover {
+    background-color: #c82333;
+}
+button.unblock {
+    background-color: #28a745;
+}
+button.unblock:hover {
+    background-color: #218838;
+}
 body {
     font-family: Arial, sans-serif;
     padding: 2rem;

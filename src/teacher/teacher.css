@@ -46,3 +46,84 @@ th {
     background: #cce5ff;
     color: #004085;
 }
+/* Unified style with admin dashboard */
+body {
+    font-family: Arial, sans-serif;
+    padding: 2rem;
+    background-color: #f5f5f5;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
+}
+
+#messageContainer {
+    margin-bottom: 15px;
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9f5ff;
+}
+
+button {
+    padding: 6px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+button.delete {
+    background-color: #f44336;
+}
+button.delete:hover {
+    background-color: #c82333;
+}
+
+button:hover:not(.delete) {
+    background-color: #0056b3;
+    color: white;
+}
+
+#logoutBtn {
+    margin-top: 20px;
+    background-color: #28a745;
+    color: white;
+}
+
+#logoutBtn:hover {
+    background-color: #218838;
+}

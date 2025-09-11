@@ -51,21 +51,33 @@ onAuthStateChanged(auth, (user) => {
       console.log("DEBUG: userSnap.id:", userSnap.id);
       console.log("DEBUG: userSnap.data():", userSnap.data());
 
-      if (!userSnap.exists() || !userSnap.data().approved) {
-        // ❌ Not approved yet → hide sections
+      if (!userSnap.exists()) {
+        teachersSection.style.display = "none";
+        appointmentsSection.style.display = "none";
+        showMessage("❌ User not found.", "error");
+        return;
+      }
+      const userData = userSnap.data();
+      if (userData.blocked) {
+        teachersSection.style.display = "none";
+        appointmentsSection.style.display = "none";
+        showMessage(
+          "🚫 Your account has been blocked by the admin. You cannot book or view appointments.",
+          "error"
+        );
+        return;
+      }
+      if (!userData.approved) {
         teachersSection.style.display = "none";
         appointmentsSection.style.display = "none";
         showMessage("⏳ Your account is awaiting admin approval.", "info");
-      } else {
-        // ✅ Approved → show dashboard
-        teachersSection.style.display = "block";
-        appointmentsSection.style.display = "block";
-
-        console.log("✅ Student approved in real time:", userSnap.data());
-
-        loadTeachers(user.uid);
-        loadAppointments(user.uid);
+        return;
       }
+      // ✅ Approved and not blocked → show dashboard
+      teachersSection.style.display = "block";
+      appointmentsSection.style.display = "block";
+      loadTeachers(user.uid);
+      loadAppointments(user.uid);
     });
   } else {
     window.location.href = "../auth/login.html";
@@ -97,6 +109,13 @@ async function loadTeachers(studentUid) {
 
 // 🔹 Book appointment
 window.bookAppointment = async (teacherId, teacherName, studentUid) => {
+  // Blocked check (defensive, in case UI is bypassed)
+  const userRef = doc(db, "users", studentUid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists() && userSnap.data().blocked) {
+    showMessage("🚫 You are blocked and cannot book appointments.", "error");
+    return;
+  }
   if (!confirm(`Book appointment with ${teacherName}?`)) return;
 
   // Prevent duplicate bookings

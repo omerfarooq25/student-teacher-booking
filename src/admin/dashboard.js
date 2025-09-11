@@ -1,3 +1,51 @@
+// Load Appointments Table
+async function loadAppointments() {
+  const appointmentsTable = document
+    .getElementById("appointmentsTable")
+    .querySelector("tbody");
+  appointmentsTable.innerHTML = "";
+  const appointmentsSnap = await getDocs(collection(db, "appointments"));
+  const usersSnap = await getDocs(collection(db, "users"));
+  const usersMap = {};
+  usersSnap.forEach((doc) => {
+    usersMap[doc.id] = doc.data();
+  });
+  appointmentsSnap.forEach((docSnap) => {
+    const appt = docSnap.data();
+    const student = usersMap[appt.studentId] || { name: "Unknown" };
+    const teacher = usersMap[appt.teacherId] || { name: "Unknown" };
+    let actionBtns = "";
+    if (appt.status === "pending") {
+      actionBtns = `
+        <button onclick="acceptAppointment('${docSnap.id}')">Accept</button>
+        <button class='delete' onclick="rejectAppointment('${docSnap.id}')">Reject</button>
+      `;
+    }
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${student.name}</td>
+      <td>${teacher.name}</td>
+      <td>${appt.date || "-"} ${appt.time || ""}</td>
+      <td>${appt.status || "-"}</td>
+      <td>${actionBtns}</td>
+    `;
+    appointmentsTable.appendChild(row);
+  });
+}
+
+// Accept Appointment
+window.acceptAppointment = async (id) => {
+  await updateDoc(doc(db, "appointments", id), { status: "accepted" });
+  loadAppointments();
+  loadStats();
+};
+
+// Reject Appointment
+window.rejectAppointment = async (id) => {
+  await updateDoc(doc(db, "appointments", id), { status: "rejected" });
+  loadAppointments();
+  loadStats();
+};
 import { auth, db } from "../firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
@@ -7,6 +55,8 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  query,
+  where,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -24,6 +74,8 @@ onAuthStateChanged(auth, async (user) => {
     const userDoc = await getDoc(userRef);
     if (userDoc.exists() && userDoc.data().role === "admin") {
       loadUsers();
+      loadStats(); // Sync stats on dashboard load
+      loadAppointments();
     } else {
       alert("Access denied!");
       window.location.href = "../auth/login.html";
@@ -69,16 +121,26 @@ async function loadUsers() {
     // Block/Unblock button logic: only for non-admins
     let blockBtn = "-";
     if (user.role !== "admin") {
-      blockBtn = `<button onclick="toggleBlock('${
-        docSnap.id
-      }', ${!!user.blocked})">${user.blocked ? "Unblock" : "Block"}</button>`;
+      if (user.blocked) {
+        blockBtn = `<button class="unblock" onclick="toggleBlock('${docSnap.id}', true)">Unblock</button>`;
+      } else {
+        blockBtn = `<button class="block" onclick="toggleBlock('${docSnap.id}', false)">Block</button>`;
+      }
+    }
+
+    // Approved column logic
+    let approvedCol = "-";
+    if (user.role === "student") {
+      approvedCol = user.approved ? "✅" : "❌";
+    } else if (user.role === "teacher") {
+      approvedCol = "✅";
     }
 
     row.innerHTML = `
       <td>${user.name}</td>
       <td>${user.email}</td>
       <td>${user.role}</td>
-      <td>${user.role === "student" ? (user.approved ? "✅" : "❌") : "-"}</td>
+      <td>${approvedCol}</td>
       <td>${blockBtn}</td>
       <td>
         ${
@@ -99,6 +161,8 @@ async function loadUsers() {
 window.approveUser = async (uid) => {
   await updateDoc(doc(db, "users", uid), { approved: true });
   loadUsers();
+  loadStats(); // Sync stats after approval
+  loadAppointments();
 };
 
 // Delete User
@@ -107,6 +171,8 @@ window.deleteUser = async (uid) => {
   if (confirmDel) {
     await deleteDoc(doc(db, "users", uid));
     loadUsers();
+    loadStats(); // Sync stats after deletion
+    loadAppointments();
   }
 };
 
@@ -114,6 +180,8 @@ window.deleteUser = async (uid) => {
 window.toggleBlock = async (uid, currentStatus) => {
   await updateDoc(doc(db, "users", uid), { blocked: !currentStatus });
   loadUsers();
+  loadStats(); // Sync stats after block/unblock
+  loadAppointments();
 };
 
 // Ensure logout only happens on button click

@@ -23,13 +23,21 @@ onAuthStateChanged(auth, async (user) => {
     const userRef = doc(db, "users", user.uid);
     const userDoc = await getDoc(userRef);
 
-    if (userDoc.exists() && userDoc.data().role === "teacher") {
-      currentUser = user;
-      await loadAppointments(user.uid);
-    } else {
+    if (!userDoc.exists() || userDoc.data().role !== "teacher") {
       alert("Access denied!");
       window.location.href = "../auth/login.html";
+      return;
     }
+    const userData = userDoc.data();
+    if (userData.blocked) {
+      document.getElementById("appointmentsTable").parentElement.style.display =
+        "none";
+      document.getElementById("messageContainer").textContent =
+        "🚫 Your account has been blocked by the admin. You cannot manage appointments.";
+      return;
+    }
+    currentUser = user;
+    await loadAppointments(user.uid);
   } else {
     window.location.href = "../auth/login.html";
   }
@@ -54,28 +62,22 @@ async function loadAppointments(teacherId) {
       : "Unknown";
 
     const row = document.createElement("tr");
+    let statusDisplay =
+      appointment.status === "pending"
+        ? "🟡 Pending"
+        : appointment.status === "accepted"
+        ? "🟢 Accepted"
+        : "🔴 Rejected";
+    let actionsDisplay =
+      appointment.status === "pending"
+        ? `<button onclick="updateStatus('${docSnap.id}', 'accepted')">✅ Accept</button>
+           <button onclick="updateStatus('${docSnap.id}', 'rejected')">❌ Reject</button>`
+        : "-";
     row.innerHTML = `
       <td>${studentName}</td>
       <td>${appointment.timestamp.toDate().toLocaleString()}</td>
-      <td>${appointment.status}</td>
-      <td>
-        ${
-          appointment.status === "pending"
-            ? "🟡 Pending"
-            : appointment.status === "accepted"
-            ? "🟢 Accepted"
-            : "🔴 Rejected"
-        }
-      </td>
-      <td>
-        ${
-          appointment.status === "pending"
-            ? `
-            <button onclick="updateStatus('${docSnap.id}', 'accepted')">✅ Accept</button>
-            <button onclick="updateStatus('${docSnap.id}', 'rejected')">❌ Reject</button>`
-            : "-"
-        }
-      </td>
+      <td>${statusDisplay}</td>
+      <td>${actionsDisplay}</td>
     `;
     appointmentsTable.appendChild(row);
   }

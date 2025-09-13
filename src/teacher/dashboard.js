@@ -68,14 +68,27 @@ async function loadAppointments(teacherId) {
         : appointment.status === "accepted"
         ? "🟢 Accepted"
         : "🔴 Rejected";
-    let actionsDisplay =
-      appointment.status === "pending"
-        ? `<button onclick="updateStatus('${docSnap.id}', 'accepted')">✅ Accept</button>
-           <button onclick="updateStatus('${docSnap.id}', 'rejected')">❌ Reject</button>`
+    let actionsDisplay = "-";
+    if (appointment.status === "pending") {
+      actionsDisplay = `<button class='accept' onclick=\"updateStatus('${docSnap.id}', 'accepted')\">✅ Accept</button>
+           <button class='reject' onclick=\"updateStatus('${docSnap.id}', 'rejected')\">❌ Reject</button>`;
+    } else if (appointment.status === "accepted") {
+      actionsDisplay = `<button class='reject' onclick=\"updateStatus('${docSnap.id}', 'rejected')\">❌ Reject</button>
+           <button class='schedule' onclick=\"scheduleLater('${docSnap.id}')\">⏳ Schedule Later</button>`;
+    } else if (appointment.status === "rejected") {
+      actionsDisplay = `<button class='approve' onclick=\"updateStatus('${docSnap.id}', 'accepted')\">✅ Approve</button>
+           <button class='schedule' onclick=\"scheduleLater('${docSnap.id}')\">⏳ Schedule Later</button>`;
+    }
+    // Format appointment date/time and subject for display
+    let dateTimeStr =
+      appointment.date && appointment.time
+        ? `${appointment.date} ${appointment.time}`
         : "-";
+    let subjectStr = appointment.subject || "-";
     row.innerHTML = `
       <td>${studentName}</td>
-      <td>${appointment.timestamp.toDate().toLocaleString()}</td>
+      <td>${dateTimeStr}</td>
+      <td>${subjectStr}</td>
       <td>${statusDisplay}</td>
       <td>${actionsDisplay}</td>
     `;
@@ -87,6 +100,12 @@ window.updateStatus = async (appointmentId, status) => {
   await updateDoc(doc(db, "appointments", appointmentId), { status });
   // 💡 Reload appointments for the current user after updating
   loadAppointments(currentUser.uid);
+};
+
+// Schedule Later handler (placeholder)
+window.scheduleLater = async (appointmentId) => {
+  // You can implement a reschedule dialog/modal here
+  alert("Feature coming soon: Schedule Later for appointment " + appointmentId);
 };
 
 import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";

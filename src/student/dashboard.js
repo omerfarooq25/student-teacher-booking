@@ -98,7 +98,7 @@ async function loadTeachers(studentUid) {
       <td>${teacher.name}</td>
       <td>${teacher.email}</td>
       <td>
-        <button onclick="bookAppointment('${docSnap.id}', '${teacher.name}', '${studentUid}')">
+        <button onclick="openBookingModal('${docSnap.id}', '${teacher.name}', '${studentUid}')">
           Book
         </button>
       </td>
@@ -106,6 +106,79 @@ async function loadTeachers(studentUid) {
     teachersTable.appendChild(row);
   });
 }
+
+// Modal logic
+const bookingModal = document.getElementById("bookingModal");
+const bookingForm = document.getElementById("bookingForm");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const modalTeacherId = document.getElementById("modalTeacherId");
+const modalTeacherName = document.getElementById("modalTeacherName");
+const appointmentDate = document.getElementById("appointmentDate");
+const appointmentTime = document.getElementById("appointmentTime");
+const appointmentSubject = document.getElementById("appointmentSubject");
+
+window.openBookingModal = (teacherId, teacherName, studentUid) => {
+  modalTeacherId.value = teacherId;
+  modalTeacherName.value = teacherName;
+  bookingModal.style.display = "flex";
+  // Store studentUid for booking
+  bookingForm.dataset.studentUid = studentUid;
+};
+
+closeModalBtn.onclick = () => {
+  bookingModal.style.display = "none";
+  bookingForm.reset();
+};
+
+bookingForm.onsubmit = async (e) => {
+  e.preventDefault();
+  const teacherId = modalTeacherId.value;
+  const teacherName = modalTeacherName.value;
+  const studentUid = bookingForm.dataset.studentUid;
+  const date = appointmentDate.value;
+  const time = appointmentTime.value;
+  const subject = appointmentSubject.value;
+
+  // Blocked check (defensive)
+  const userRef = doc(db, "users", studentUid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists() && userSnap.data().blocked) {
+    showMessage("🚫 You are blocked and cannot book appointments.", "error");
+    return;
+  }
+
+  // Prevent duplicate bookings
+  const q = query(
+    collection(db, "appointments"),
+    where("studentId", "==", studentUid),
+    where("teacherId", "==", teacherId),
+    where("status", "in", ["pending", "accepted"])
+  );
+  const existing = await getDocs(q);
+  if (!existing.empty) {
+    showMessage(
+      "❌ You already have a pending/approved appointment with this teacher!",
+      "error"
+    );
+    return;
+  }
+
+  // Create new appointment
+  await addDoc(collection(db, "appointments"), {
+    studentId: studentUid,
+    teacherId,
+    date,
+    time,
+    subject,
+    status: "pending",
+    timestamp: Timestamp.now(),
+  });
+
+  showMessage("✅ Appointment requested!", "success");
+  bookingModal.style.display = "none";
+  bookingForm.reset();
+  loadAppointments(studentUid);
+};
 
 // 🔹 Book appointment
 window.bookAppointment = async (teacherId, teacherName, studentUid) => {

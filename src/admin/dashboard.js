@@ -20,12 +20,20 @@ async function loadAppointments() {
         <button onclick="acceptAppointment('${docSnap.id}')">Accept</button>
         <button class='delete' onclick="rejectAppointment('${docSnap.id}')">Reject</button>
       `;
+    } else if (appt.status === "accepted") {
+      actionBtns = `
+        <button class='delete' onclick="rejectAppointment('${docSnap.id}')">Reject</button>
+      `;
     }
+    const dateTimeStr =
+      appt.date && appt.time ? `${appt.date} ${appt.time}` : "-";
+    const subjectStr = appt.subject || "-";
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${student.name}</td>
       <td>${teacher.name}</td>
-      <td>${appt.date || "-"} ${appt.time || ""}</td>
+      <td>${dateTimeStr}</td>
+      <td>${subjectStr}</td>
       <td>${appt.status || "-"}</td>
       <td>${actionBtns}</td>
     `;

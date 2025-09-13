@@ -1,3 +1,24 @@
+/* Action button grading */
+button.accept, button.approve {
+    background-color: #28a745;
+}
+button.accept:hover, button.approve:hover {
+    background-color: #218838;
+}
+button.reject {
+    background-color: #f44336;
+}
+button.reject:hover {
+    background-color: #c82333;
+}
+button.schedule {
+    background-color: #ffc107;
+    color: #333;
+}
+button.schedule:hover {
+    background-color: #e0a800;
+    color: #fff;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 20px;

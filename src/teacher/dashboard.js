@@ -60,38 +60,81 @@ async function loadAppointments(teacherId) {
     const studentName = studentDoc.exists()
       ? studentDoc.data().name
       : "Unknown";
-
     const row = document.createElement("tr");
-    let statusDisplay =
+
+    const tdStudent = document.createElement("td");
+    tdStudent.textContent = studentName;
+    row.appendChild(tdStudent);
+
+    const dateTimeStr =
+      appointment.date && appointment.time
+        ? `${appointment.date} ${appointment.time}`
+        : "-";
+    const tdDate = document.createElement("td");
+    tdDate.textContent = dateTimeStr;
+    row.appendChild(tdDate);
+
+    const tdSubject = document.createElement("td");
+    tdSubject.textContent = appointment.subject || "-";
+    row.appendChild(tdSubject);
+
+    const tdStatus = document.createElement("td");
+    tdStatus.textContent =
       appointment.status === "pending"
         ? "🟡 Pending"
         : appointment.status === "accepted"
         ? "🟢 Accepted"
         : "🔴 Rejected";
-    let actionsDisplay = "-";
+    row.appendChild(tdStatus);
+
+    const tdActions = document.createElement("td");
     if (appointment.status === "pending") {
-      actionsDisplay = `<button class='accept' onclick=\"updateStatus('${docSnap.id}', 'accepted')\">✅ Accept</button>
-           <button class='reject' onclick=\"updateStatus('${docSnap.id}', 'rejected')\">❌ Reject</button>`;
+      const acceptBtn = document.createElement("button");
+      acceptBtn.className = "accept";
+      acceptBtn.textContent = "✅ Accept";
+      acceptBtn.addEventListener("click", () =>
+        updateStatus(docSnap.id, "accepted")
+      );
+      tdActions.appendChild(acceptBtn);
+
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "reject";
+      rejectBtn.textContent = "❌ Reject";
+      rejectBtn.addEventListener("click", () =>
+        updateStatus(docSnap.id, "rejected")
+      );
+      tdActions.appendChild(rejectBtn);
     } else if (appointment.status === "accepted") {
-      actionsDisplay = `<button class='reject' onclick=\"updateStatus('${docSnap.id}', 'rejected')\">❌ Reject</button>
-           <button class='schedule' onclick=\"scheduleLater('${docSnap.id}')\">⏳ Schedule Later</button>`;
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "reject";
+      rejectBtn.textContent = "❌ Reject";
+      rejectBtn.addEventListener("click", () =>
+        updateStatus(docSnap.id, "rejected")
+      );
+      tdActions.appendChild(rejectBtn);
+
+      const scheduleBtn = document.createElement("button");
+      scheduleBtn.className = "schedule";
+      scheduleBtn.textContent = "⏳ Schedule Later";
+      scheduleBtn.addEventListener("click", () => scheduleLater(docSnap.id));
+      tdActions.appendChild(scheduleBtn);
     } else if (appointment.status === "rejected") {
-      actionsDisplay = `<button class='approve' onclick=\"updateStatus('${docSnap.id}', 'accepted')\">✅ Approve</button>
-           <button class='schedule' onclick=\"scheduleLater('${docSnap.id}')\">⏳ Schedule Later</button>`;
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "approve";
+      approveBtn.textContent = "✅ Approve";
+      approveBtn.addEventListener("click", () =>
+        updateStatus(docSnap.id, "accepted")
+      );
+      tdActions.appendChild(approveBtn);
+
+      const scheduleBtn = document.createElement("button");
+      scheduleBtn.className = "schedule";
+      scheduleBtn.textContent = "⏳ Schedule Later";
+      scheduleBtn.addEventListener("click", () => scheduleLater(docSnap.id));
+      tdActions.appendChild(scheduleBtn);
     }
-    // Format appointment date/time and subject for display
-    let dateTimeStr =
-      appointment.date && appointment.time
-        ? `${appointment.date} ${appointment.time}`
-        : "-";
-    let subjectStr = appointment.subject || "-";
-    row.innerHTML = `
-      <td>${studentName}</td>
-      <td>${dateTimeStr}</td>
-      <td>${subjectStr}</td>
-      <td>${statusDisplay}</td>
-      <td>${actionsDisplay}</td>
-    `;
+
+    row.appendChild(tdActions);
     appointmentsTable.appendChild(row);
   }
 }

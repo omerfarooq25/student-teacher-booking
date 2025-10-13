@@ -25,8 +25,24 @@ export function showMessage(message, type = "info") {
     </div>
   `;
 
+  // Create message element safely
+  const msgEl = document.createElement("div");
+  msgEl.className = `message ${type}`;
+  msgEl.style.padding = "10px";
+  msgEl.style.borderRadius = "5px";
+  msgEl.style.marginBottom = "10px";
+  msgEl.style.background =
+    type === "success" ? "#4CAF50" : type === "error" ? "#f44336" : "#2196F3";
+  msgEl.style.color = "white";
+  msgEl.style.fontWeight = "bold";
+  msgEl.textContent = message;
+
+  // Clear previous and show new
+  container.innerHTML = "";
+  container.appendChild(msgEl);
+
   // Auto hide after 3 seconds
   setTimeout(() => {
-    container.innerHTML = "";
+    if (container.contains(msgEl)) container.removeChild(msgEl);
   }, 3000);
 }

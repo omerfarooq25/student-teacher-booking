@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserRole(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && getUserRole(request.auth.uid) == 'admin';
+    }
+
+    function isApproved(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.approved == true;
+    }
+
+    function isBlocked(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.blocked == true;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Allow authenticated user to create their own profile as student or teacher
+      allow create: if isSignedIn()
+                    && request.auth.uid == userId
+                    && (request.resource.data.role in ['student', 'teacher'])
+                    && request.resource.data.approved == false
+                    && (request.resource.data.blocked == false || request.resource.data.blocked == null);
+
+      // Users can read/update their own profile; admins can read/update any
+      allow read, update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      // Only admins can delete user documents
+      allow delete: if isAdmin();
+    }
+
+    // Appointments collection
+    match /appointments/{appointmentId} {
+      // Students (approved, not blocked) can create appointments for themselves
+      allow create: if isSignedIn()
+                    && request.auth.uid == request.resource.data.studentId
+                    && isApproved(request.auth.uid)
+                    && !isBlocked(request.auth.uid);
+
+      // Students can read their own appointments; teachers can read their appointments; admins can read all
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.studentId ||
+        request.auth.uid == resource.data.teacherId ||
+        isAdmin()
+      );
+
+      // Teachers for their appointments (status changes) and admins can update
+      allow update: if isSignedIn() && (
+        request.auth.uid == resource.data.teacherId ||
+        isAdmin()
+      );
+
+      // Only admins can delete appointments
+      allow delete: if isSignedIn() && isAdmin();
+    }
+
+    // Deny everything else by default
+  }
+}

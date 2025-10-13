@@ -1,0 +1,15 @@
+# Ignore developer Firebase config (copy src/firebase.example.js -> src/firebase.config.js)
+src/firebase.config.js
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Firebase local config
+firebase.json

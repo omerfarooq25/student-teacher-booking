@@ -94,15 +94,24 @@ async function loadTeachers(studentUid) {
   snapshot.forEach((docSnap) => {
     const teacher = docSnap.data();
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${teacher.name}</td>
-      <td>${teacher.email}</td>
-      <td>
-        <button onclick="openBookingModal('${docSnap.id}', '${teacher.name}', '${studentUid}')">
-          Book
-        </button>
-      </td>
-    `;
+
+    const tdName = document.createElement("td");
+    tdName.textContent = teacher.name || "-";
+    row.appendChild(tdName);
+
+    const tdEmail = document.createElement("td");
+    tdEmail.textContent = teacher.email || "-";
+    row.appendChild(tdEmail);
+
+    const tdAction = document.createElement("td");
+    const btn = document.createElement("button");
+    btn.textContent = "Book";
+    btn.addEventListener("click", () =>
+      openBookingModal(docSnap.id, teacher.name, studentUid)
+    );
+    tdAction.appendChild(btn);
+    row.appendChild(tdAction);
+
     teachersTable.appendChild(row);
   });
 }
@@ -240,19 +249,25 @@ async function loadAppointments(studentUid) {
       : "Unknown";
 
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${teacherName}</td>
-      <td>
-        ${
-          appointment.status === "pending"
-            ? "🟡 Pending"
-            : appointment.status === "accepted"
-            ? "🟢 Accepted"
-            : "🔴 Rejected"
-        }
-      </td>
-      <td>${appointment.timestamp.toDate().toLocaleString()}</td>
-    `;
+
+    const tdTeacher = document.createElement("td");
+    tdTeacher.textContent = teacherName;
+    row.appendChild(tdTeacher);
+
+    const tdStatus = document.createElement("td");
+    const statusText =
+      appointment.status === "pending"
+        ? "🟡 Pending"
+        : appointment.status === "accepted"
+        ? "🟢 Accepted"
+        : "🔴 Rejected";
+    tdStatus.textContent = statusText;
+    row.appendChild(tdStatus);
+
+    const tdRequested = document.createElement("td");
+    tdRequested.textContent = appointment.timestamp.toDate().toLocaleString();
+    row.appendChild(tdRequested);
+
     appointmentsTable.appendChild(row);
   }
 }

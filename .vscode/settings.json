@@ -1,0 +1,6 @@
+{
+  // Serve the repository root so pages in /src and /public are reachable
+  "liveServer.settings.root": "/",
+  "liveServer.settings.port": 5500,
+  "browser-preview.openInPreview": false
+}

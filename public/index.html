@@ -1,18 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student–Teacher Booking</title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <main class="hero">
+      <div class="container">
+        <header class="hero-header">
+          <div class="logo">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden
+            >
+              <rect width="24" height="24" rx="6" fill="#2F80ED"></rect>
+              <path
+                d="M6 16v-4a4 4 0 014-4h4"
+                stroke="#fff"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </div>
+          <div class="title-group">
+            <h1 class="site-title">Student–Teacher Booking</h1>
+            <p class="tagline">
+              Schedule and manage student-teacher appointments easily.
+            </p>
+          </div>
+        </header>
 
-<head>
-    <title>Student–Teacher Booking Appointment</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+        <section class="hero-inner">
+          <div class="hero-left">
+            <div class="logo-wrap">
+              <div class="brand-mark"></div>
+              <div>
+                <h1 class="site-title">Student–Teacher Booking</h1>
+                <p class="tagline">
+                  Schedule and manage student-teacher appointments easily.
+                </p>
+                <div class="cta-row" style="margin-top: 14px">
+                  <a class="btn btn-primary" href="/src/auth/login.html"
+                    >Sign in</a
+                  >
+                  <a class="btn btn-outline" href="/src/auth/register.html"
+                    >Create account</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
 
-<body>
-    <div class = "headpanel">
-    <h1>Welcome to Student–Teacher Booking Appointment</h1>
-    <nav>
-        <a href="../src/auth/login.html">Login</a> |
-        <a href="../src/auth/register.html">Register</a>
-    </nav>
-    </div>
-</body>
+          <aside class="hero-right">
+            <div class="card">
+              <h3>Get started</h3>
+              <p>
+                Use a secure, simple workflow for scheduling and managing
+                appointments between students and teachers. Admins can approve
+                accounts and manage users.
+              </p>
+            </div>
+          </aside>
+        </section>
+
+        <footer class="hero-foot">
+          <p>Built with Firebase · Lightweight and secure for schools</p>
+        </footer>
+      </div>
+    </main>
+  </body>
 </html>

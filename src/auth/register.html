@@ -1,27 +1,39 @@
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form id="registerForm">
-        <input type="text" placeholder="Name" id="name" required><br>
-        <input type="email" placeholder="Email" id="email" required><br>
-        <input type="password" placeholder="Password" id="password" required><br>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Register — Student–Teacher Booking</title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body class="auth-wrap">
+    <main class="auth-card">
+      <h2>Create an account</h2>
+      <p class="lead">Start scheduling and managing appointments</p>
 
-        <!-- Role Dropdown -->
-        <label for="role">Role:</label>
+      <form id="registerForm" class="form-row">
+        <input type="text" placeholder="Full name" id="name" required />
+        <input type="email" placeholder="Email" id="email" required />
+        <input type="password" placeholder="Password" id="password" required />
+
+        <label for="role" class="muted">Choose your role</label>
         <select id="role" required>
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-        </select><br>
+          <option value="">Select role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
 
-        <button type="submit">Register</button>
-    </form>
-        <div id="messageContainer"></div>
+        <div class="controls">
+          <button class="primary" type="submit">Create account</button>
+          <a class="muted right-link" href="../../public/index.html"
+            >Back to home</a
+          >
+        </div>
+      </form>
+
+      <div id="messageContainer" style="margin-top: 12px"></div>
+    </main>
     <script type="module" src="register.js"></script>
-</body>
-
+  </body>
 </html>

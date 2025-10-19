@@ -64,3 +64,72 @@ exports.deleteUserAndData = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError("internal", "Failed to delete user.");
   }
 });
+
+/**
+ * Approve a user (set approved=true). Only admins can call.
+ * data: { uid }
+ */
+exports.approveUser = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "Request has no authentication."
+    );
+  }
+  const callerUid = context.auth.uid;
+  const callerDoc = await db.collection("users").doc(callerUid).get();
+  if (!callerDoc.exists || callerDoc.data().role !== "admin") {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      "Caller is not an admin."
+    );
+  }
+
+  const uid = data.uid;
+  if (!uid) {
+    throw new functions.https.HttpsError("invalid-argument", "Missing uid");
+  }
+
+  try {
+    await db.collection("users").doc(uid).update({ approved: true });
+    return { success: true };
+  } catch (err) {
+    console.error("approveUser error:", err);
+    throw new functions.https.HttpsError("internal", "Failed to approve user");
+  }
+});
+
+/**
+ * Toggle block/unblock for a user. Only admins can call.
+ * data: { uid, block } where block is true to block, false to unblock
+ */
+exports.toggleBlockUser = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "Request has no authentication."
+    );
+  }
+  const callerUid = context.auth.uid;
+  const callerDoc = await db.collection("users").doc(callerUid).get();
+  if (!callerDoc.exists || callerDoc.data().role !== "admin") {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      "Caller is not an admin."
+    );
+  }
+
+  const uid = data.uid;
+  const block = !!data.block;
+  if (!uid) {
+    throw new functions.https.HttpsError("invalid-argument", "Missing uid");
+  }
+
+  try {
+    await db.collection("users").doc(uid).update({ blocked: block });
+    return { success: true };
+  } catch (err) {
+    console.error("toggleBlockUser error:", err);
+    throw new functions.https.HttpsError("internal", "Failed to toggle block");
+  }
+});

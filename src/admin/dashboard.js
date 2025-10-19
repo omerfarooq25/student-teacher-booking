@@ -4,15 +4,20 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
+  getFunctions,
+  httpsCallable,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+import { enableFunctionsEmulator } from "../firebase.js";
+import {
   collection,
   getDocs,
   updateDoc,
-  deleteDoc,
   doc,
   getDoc,
   query,
   where,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { showMessage } from "../utils/notification.js";
 
 const usersTable = document.getElementById("usersTable").querySelector("tbody");
 const appointmentsTable = document
@@ -196,29 +201,74 @@ async function loadUsers() {
 
 // Approve User
 window.approveUser = async (uid) => {
-  await updateDoc(doc(db, "users", uid), { approved: true });
-  await loadUsers();
-  await loadStats(); // Sync stats after approval
-  await loadAppointments();
+  try {
+    // Ensure functions emulator is connected in dev if available
+    const functions = getFunctions();
+    try {
+      // attempt to enable functions emulator (no-op in prod)
+      await enableFunctionsEmulator(functions).catch(() => {});
+    } catch (e) {
+      // ignore
+    }
+    const approveCallable = httpsCallable(functions, "approveUser");
+    const resp = await approveCallable({ uid });
+    if (resp && resp.data && resp.data.success) {
+      showMessage("✅ User approved", "success");
+    }
+    await loadUsers();
+    await loadStats();
+    await loadAppointments();
+  } catch (err) {
+    console.error("approveUser failed:", err);
+    showMessage("❌ Failed to approve user", "error");
+  }
 };
 
 // Delete User
 window.deleteUser = async (uid) => {
   const confirmDel = confirm("Are you sure you want to delete this user?");
-  if (confirmDel) {
-    await deleteDoc(doc(db, "users", uid));
+  if (!confirmDel) return;
+
+  try {
+    const functions = getFunctions();
+    try {
+      await enableFunctionsEmulator(functions).catch(() => {});
+    } catch (e) {}
+    const deleteUserCallable = httpsCallable(functions, "deleteUserAndData");
+    const resp = await deleteUserCallable({ uid });
+    if (resp && resp.data && resp.data.success) {
+      showMessage("✅ User deleted successfully", "success");
+    } else {
+      showMessage("⚠️ Deletion completed with unexpected response", "info");
+    }
     await loadUsers();
-    await loadStats(); // Sync stats after deletion
+    await loadStats();
     await loadAppointments();
+  } catch (err) {
+    console.error("deleteUser failed:", err);
+    showMessage("❌ Failed to delete user. See console for details.", "error");
   }
 };
 
 // Toggle Block/Unblock
 window.toggleBlock = async (uid, currentStatus) => {
-  await updateDoc(doc(db, "users", uid), { blocked: !currentStatus });
-  await loadUsers();
-  await loadStats(); // Sync stats after block/unblock
-  await loadAppointments();
+  try {
+    const functions = getFunctions();
+    try {
+      await enableFunctionsEmulator(functions).catch(() => {});
+    } catch (e) {}
+    const toggleCallable = httpsCallable(functions, "toggleBlockUser");
+    const resp = await toggleCallable({ uid, block: !currentStatus });
+    if (resp && resp.data && resp.data.success) {
+      showMessage("✅ User block status updated", "success");
+    }
+    await loadUsers();
+    await loadStats();
+    await loadAppointments();
+  } catch (err) {
+    console.error("toggleBlock failed:", err);
+    showMessage("❌ Failed to update block status", "error");
+  }
 };
 
 // Auth check

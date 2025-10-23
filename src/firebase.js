@@ -1,37 +1,45 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import {
-  connectEmulators,
-  shouldUseEmulator,
-  connectFunctionsEmulatorFor,
-} from "./emulator.js";
+// Emulators removed — this app will use live Firebase by default.
 
 // Try to import developer-provided config from src/firebase.config.js
-let firebaseConfig;
+let firebaseConfig = null;
+let app = null;
+let _auth = null;
+let _db = null;
+let firebaseAvailable = false;
+
 try {
-  // This import will only succeed if the developer copies the example to src/firebase.config.js
-  // and fills in their project config. The real config file should be in .gitignore.
-  // Use dynamic import so that missing file results in a catchable error.
+  // Try to load developer-provided config from src/firebase.config.js
   const mod = await import("./firebase.config.js");
   firebaseConfig = mod.firebaseConfig;
+  if (firebaseConfig) {
+    app = initializeApp(firebaseConfig);
+    _auth = getAuth(app);
+    _db = getFirestore(app);
+    firebaseAvailable = true;
+  }
 } catch (err) {
-  console.error(
-    "Missing Firebase config. Create `src/firebase.config.js` by copying `src/firebase.example.js` and filling in your Firebase project values.\nError:",
+  // Don't throw. Allow the app to load so pages render — but mark Firebase unavailable.
+  console.warn(
+    "Firebase config not found. Create `src/firebase.config.js` by copying `src/firebase.example.js` and filling in your Firebase project values.",
     err
-  );
-  throw new Error(
-    "Firebase configuration missing. See src/firebase.example.js for instructions."
   );
 }
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const auth = _auth;
+export const db = _db;
+export { firebaseAvailable };
 // Optional exported helper to enable local emulators programmatically.
 export async function enableEmulators(options = {}) {
   try {
-    await connectEmulators({ auth, db, ...options });
+    // Only connect emulators when the developer explicitly opts in (avoid accidental emulator usage).
+    if (firebaseAvailable && shouldUseEmulator()) {
+      await connectEmulators({ auth, db, ...options });
+    } else {
+      console.info('Emulator connection skipped; not opted-in.');
+    }
   } catch (err) {
     console.warn("Failed to connect emulators:", err);
   }
@@ -44,14 +52,14 @@ export async function enableFunctionsEmulator(
   port = 5001
 ) {
   try {
-    await connectFunctionsEmulatorFor(functionsInstance, host, port);
+    // Only connect functions emulator when explicitly opted-in.
+    if (firebaseAvailable && shouldUseEmulator()) {
+      await connectFunctionsEmulatorFor(functionsInstance, host, port);
+    } else {
+      console.info('Functions emulator connection skipped; not opted-in.');
+    }
   } catch (err) {
     console.warn("Failed to connect functions emulator:", err);
   }
 }
 
-// Auto-enable emulators when running on localhost or when opt-in flag is present.
-if (typeof window !== "undefined" && shouldUseEmulator()) {
-  // Run in next microtask to avoid blocking module evaluation.
-  Promise.resolve().then(() => enableEmulators().catch(() => {}));
-}

@@ -3,11 +3,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {
-  getFunctions,
-  httpsCallable,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
-import { enableFunctionsEmulator } from "../firebase.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 import {
   collection,
   getDocs,
@@ -202,14 +198,7 @@ async function loadUsers() {
 // Approve User
 window.approveUser = async (uid) => {
   try {
-    // Ensure functions emulator is connected in dev if available
     const functions = getFunctions();
-    try {
-      // attempt to enable functions emulator (no-op in prod)
-      await enableFunctionsEmulator(functions).catch(() => {});
-    } catch (e) {
-      // ignore
-    }
     const approveCallable = httpsCallable(functions, "approveUser");
     const resp = await approveCallable({ uid });
     if (resp && resp.data && resp.data.success) {
@@ -231,9 +220,6 @@ window.deleteUser = async (uid) => {
 
   try {
     const functions = getFunctions();
-    try {
-      await enableFunctionsEmulator(functions).catch(() => {});
-    } catch (e) {}
     const deleteUserCallable = httpsCallable(functions, "deleteUserAndData");
     const resp = await deleteUserCallable({ uid });
     if (resp && resp.data && resp.data.success) {
@@ -254,9 +240,6 @@ window.deleteUser = async (uid) => {
 window.toggleBlock = async (uid, currentStatus) => {
   try {
     const functions = getFunctions();
-    try {
-      await enableFunctionsEmulator(functions).catch(() => {});
-    } catch (e) {}
     const toggleCallable = httpsCallable(functions, "toggleBlockUser");
     const resp = await toggleCallable({ uid, block: !currentStatus });
     if (resp && resp.data && resp.data.success) {

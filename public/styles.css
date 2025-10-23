@@ -4,8 +4,8 @@
   --bg-800: #0b1830;
   --card: rgba(255, 255, 255, 0.03);
   --muted: #9aa7bd;
-  --accent: #4f8ff7; /* blue */
-  --accent-2: #7b61ff; /* violet */
+  --accent: #7b2cbf; /* primary purple */
+  --accent-2: #5a39ff; /* secondary purple */
   --glass: rgba(255, 255, 255, 0.02);
   --text: #eaf2ff;
   --success: #22c55e;
@@ -21,13 +21,9 @@ body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", Arial;
-  background: radial-gradient(
-      1000px 600px at 10% 10%,
-      rgba(79, 143, 247, 0.08),
-      transparent
-    ),
-    linear-gradient(180deg, var(--bg-900), var(--bg-800));
-  color: var(--text);
+  /* page background is white per request */
+  background: #ffffff;
+  color: #0b1220;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -87,6 +83,42 @@ p {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  /* light theme overrides for landing and auth pages */
+  background: #ffffff; /* white page background */
+  color: #0b1220; /* dark text */
+}
+.hero .container, .auth-wrap .auth-card { color: inherit }
+
+.hero .card,
+.auth-card {
+  /* strong purple card for brand look */
+  background: linear-gradient(180deg, #7b2cbf 0%, #5a39ff 100%);
+  border: 1px solid rgba(123,44,191,0.22);
+  box-shadow: 0 18px 60px rgba(88, 39, 124, 0.28);
+  color: #ffffff;
+}
+
+.auth-card input[type="text"], .auth-card input[type="email"], .auth-card input[type="password"], .auth-card select {
+  /* inputs should remain white for contrast against the dark card */
+  background: #ffffff;
+  color: #0b1220;
+  border: 1px solid rgba(11,18,32,0.08);
+}
+
+.hero .site-title, .hero .tagline, .auth-card h2, .auth-card p.lead {
+  color: inherit;
+}
+
+/* make the card heading bright on the dark auth card */
+.auth-card h2.welcome {
+  color: #ffffff;
+}
+
+.btn-primary { /* keep accent buttons visible on white */
+  box-shadow: 0 8px 24px rgba(123,44,191,0.12);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border: 0;
 }
 .hero-inner {
   width: 100%;
@@ -144,8 +176,8 @@ p {
 }
 .btn-outline {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--text);
+  border: 1px solid rgba(123,44,191,0.14);
+  color: var(--accent);
 }
 
 .hero-right {
@@ -154,15 +186,17 @@ p {
 .card {
   padding: 18px;
   border-radius: 14px;
-  background: linear-gradient(180deg, var(--glass), transparent);
-  border: 1px solid var(--card);
+  background: linear-gradient(180deg, #7b2cbf 0%, #5a39ff 100%);
+  border: 1px solid rgba(123,44,191,0.18);
+  box-shadow: 0 18px 60px rgba(88, 39, 124, 0.28);
+  color: #ffffff;
 }
 .card h3 {
   margin: 0 0 8px;
 }
 .card p {
   margin: 0;
-  color: var(--muted);
+  color: #ffffff; /* make p text in cards white for visibility */
 }
 
 /* Auth */
@@ -178,9 +212,7 @@ p {
   max-width: 440px;
   padding: 28px;
   border-radius: 14px;
-  background: linear-gradient(180deg, var(--glass), transparent);
-  border: 1px solid var(--card);
-  box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+  /* background/border/box-shadow defined above in shared selector */
 }
 .auth-card h2 {
   margin: 0 0 8px;
@@ -188,7 +220,7 @@ p {
 }
 .auth-card p.lead {
   margin: 0 0 18px;
-  color: var(--muted);
+  color: rgba(255,255,255,0.95);
 }
 .form-row {
   display: flex;
@@ -214,9 +246,17 @@ select {
 }
 input:focus,
 select:focus {
-  box-shadow: 0 6px 24px rgba(79, 143, 247, 0.08);
-  border-color: rgba(79, 143, 247, 0.6);
+  box-shadow: 0 6px 24px rgba(123,44,191,0.08);
+  border-color: rgba(123,44,191,0.6);
 }
+  .auth-card select, .form-row select {
+    /* make dropdown readable with dark text on light background */
+    background: #fff;
+    color: #111;
+  }
+  .auth-card select option, .form-row select option {
+    color: #111;
+  }
 .controls {
   display: flex;
   gap: 10px;
@@ -237,18 +277,60 @@ select:focus {
   font-weight: 700;
   cursor: pointer;
 }
+
+/* Card-specific button/link styles for legibility on purple cards */
+.auth-card .primary,
+.auth-card .btn-primary {
+  /* use a single solid deep color for card buttons */
+  background: #240046;
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgba(36,0,70,0.22);
+  border: 0;
+}
+.auth-card .primary:hover,
+.auth-card .btn-primary:hover {
+  filter: brightness(1.08);
+}
+.auth-card .secondary {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.95);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+/* Links and muted text inside cards */
+.auth-card a,
+.auth-card .right-link {
+  color: rgba(255,255,255,0.95);
+  text-decoration: underline;
+}
+.auth-card .muted,
+.auth-card .muted a {
+  color: rgba(255,255,255,0.82);
+}
+
+/* Ensure form placeholder color is readable on white inputs */
+.auth-card input::placeholder {
+  color: #8b8b8b;
+}
 .secondary {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--text);
+  border: 1px solid rgba(11,18,32,0.08);
+  color: #0b1220;
   padding: 10px 14px;
   border-radius: 10px;
 }
 
 .small-note {
   font-size: 13px;
-  color: var(--muted);
+  color: rgba(255,255,255,0.75);
   margin-top: 10px;
+}
+
+/* Ensure muted and small-note inside regular cards are visible */
+.card .small-note,
+.card .muted,
+.card .muted a {
+  color: rgba(255,255,255,0.82);
 }
 
 /* utility */

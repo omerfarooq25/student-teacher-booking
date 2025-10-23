@@ -1,0 +1,16 @@
+{
+  "name": "student-teacher-appointment-booking",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Student-Teacher Appointment Booking frontend and functions",
+  "scripts": {
+    "lint": "eslint \"**/*.{js,jsx}\" --quiet",
+    "lint:fix": "eslint \"**/*.{js,jsx}\" --fix",
+    "test:functions": "cd functions && npm test",
+    "start:static": "npx live-server --port=5500 public || echo 'Install live-server globally or run via VS Code Live Server'",
+    "prepare": "echo 'No prepare step configured'"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}

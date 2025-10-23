@@ -20,7 +20,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
   try {
     if (!firebaseAvailable) {
-      showMessage('⚠️ Firebase is not configured. See src/firebase.example.js and create src/firebase.config.js', 'error');
+      showMessage(
+        "⚠️ Firebase is not configured. See src/firebase.example.js and create src/firebase.config.js",
+        "error"
+      );
       return;
     }
     const userCredential = await signInWithEmailAndPassword(
@@ -50,10 +53,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   } catch (error) {
     // Friendly hint when network to Auth fails (common when Auth emulator isn't running)
     console.error(error);
-    if (error && error.code === 'auth/network-request-failed') {
+    if (error && error.code === "auth/network-request-failed") {
       showMessage(
-        '❌ Network error contacting Firebase Auth. If you are using the local emulator, start it first: `firebase emulators:start --only auth,firestore,functions`.\nAlternatively, disable automatic emulator mode (remove `?useFirebaseEmulator=1` or set window.USE_FIREBASE_EMULATOR = false before loading).',
-        'error'
+        "❌ Network error contacting Firebase Auth. If you are using the local emulator, start it first: `firebase emulators:start --only auth,firestore,functions`.\nAlternatively, disable automatic emulator mode (remove `?useFirebaseEmulator=1` or set window.USE_FIREBASE_EMULATOR = false before loading).",
+        "error"
       );
     } else {
       showMessage(` ❌ ${error.message}`, "error");

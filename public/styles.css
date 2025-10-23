@@ -87,25 +87,34 @@ p {
   background: #ffffff; /* white page background */
   color: #0b1220; /* dark text */
 }
-.hero .container, .auth-wrap .auth-card { color: inherit }
+.hero .container,
+.auth-wrap .auth-card {
+  color: inherit;
+}
 
 .hero .card,
 .auth-card {
   /* strong purple card for brand look */
   background: linear-gradient(180deg, #7b2cbf 0%, #5a39ff 100%);
-  border: 1px solid rgba(123,44,191,0.22);
+  border: 1px solid rgba(123, 44, 191, 0.22);
   box-shadow: 0 18px 60px rgba(88, 39, 124, 0.28);
   color: #ffffff;
 }
 
-.auth-card input[type="text"], .auth-card input[type="email"], .auth-card input[type="password"], .auth-card select {
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card select {
   /* inputs should remain white for contrast against the dark card */
   background: #ffffff;
   color: #0b1220;
-  border: 1px solid rgba(11,18,32,0.08);
+  border: 1px solid rgba(11, 18, 32, 0.08);
 }
 
-.hero .site-title, .hero .tagline, .auth-card h2, .auth-card p.lead {
+.hero .site-title,
+.hero .tagline,
+.auth-card h2,
+.auth-card p.lead {
   color: inherit;
 }
 
@@ -114,8 +123,9 @@ p {
   color: #ffffff;
 }
 
-.btn-primary { /* keep accent buttons visible on white */
-  box-shadow: 0 8px 24px rgba(123,44,191,0.12);
+.btn-primary {
+  /* keep accent buttons visible on white */
+  box-shadow: 0 8px 24px rgba(123, 44, 191, 0.12);
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   color: #fff;
   border: 0;
@@ -176,7 +186,7 @@ p {
 }
 .btn-outline {
   background: transparent;
-  border: 1px solid rgba(123,44,191,0.14);
+  border: 1px solid rgba(123, 44, 191, 0.14);
   color: var(--accent);
 }
 
@@ -187,7 +197,7 @@ p {
   padding: 18px;
   border-radius: 14px;
   background: linear-gradient(180deg, #7b2cbf 0%, #5a39ff 100%);
-  border: 1px solid rgba(123,44,191,0.18);
+  border: 1px solid rgba(123, 44, 191, 0.18);
   box-shadow: 0 18px 60px rgba(88, 39, 124, 0.28);
   color: #ffffff;
 }
@@ -220,7 +230,7 @@ p {
 }
 .auth-card p.lead {
   margin: 0 0 18px;
-  color: rgba(255,255,255,0.95);
+  color: rgba(255, 255, 255, 0.95);
 }
 .form-row {
   display: flex;
@@ -246,17 +256,19 @@ select {
 }
 input:focus,
 select:focus {
-  box-shadow: 0 6px 24px rgba(123,44,191,0.08);
-  border-color: rgba(123,44,191,0.6);
+  box-shadow: 0 6px 24px rgba(123, 44, 191, 0.08);
+  border-color: rgba(123, 44, 191, 0.6);
 }
-  .auth-card select, .form-row select {
-    /* make dropdown readable with dark text on light background */
-    background: #fff;
-    color: #111;
-  }
-  .auth-card select option, .form-row select option {
-    color: #111;
-  }
+.auth-card select,
+.form-row select {
+  /* make dropdown readable with dark text on light background */
+  background: #fff;
+  color: #111;
+}
+.auth-card select option,
+.form-row select option {
+  color: #111;
+}
 .controls {
   display: flex;
   gap: 10px;
@@ -284,7 +296,7 @@ select:focus {
   /* use a single solid deep color for card buttons */
   background: #240046;
   color: #ffffff;
-  box-shadow: 0 10px 28px rgba(36,0,70,0.22);
+  box-shadow: 0 10px 28px rgba(36, 0, 70, 0.22);
   border: 0;
 }
 .auth-card .primary:hover,
@@ -292,20 +304,20 @@ select:focus {
   filter: brightness(1.08);
 }
 .auth-card .secondary {
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.95);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Links and muted text inside cards */
 .auth-card a,
 .auth-card .right-link {
-  color: rgba(255,255,255,0.95);
+  color: rgba(255, 255, 255, 0.95);
   text-decoration: underline;
 }
 .auth-card .muted,
 .auth-card .muted a {
-  color: rgba(255,255,255,0.82);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 /* Ensure form placeholder color is readable on white inputs */
@@ -314,7 +326,7 @@ select:focus {
 }
 .secondary {
   background: transparent;
-  border: 1px solid rgba(11,18,32,0.08);
+  border: 1px solid rgba(11, 18, 32, 0.08);
   color: #0b1220;
   padding: 10px 14px;
   border-radius: 10px;
@@ -322,7 +334,7 @@ select:focus {
 
 .small-note {
   font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.75);
   margin-top: 10px;
 }
 
@@ -330,7 +342,7 @@ select:focus {
 .card .small-note,
 .card .muted,
 .card .muted a {
-  color: rgba(255,255,255,0.82);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 /* utility */

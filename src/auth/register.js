@@ -33,7 +33,10 @@ document
 
     try {
       if (!firebaseAvailable) {
-        showMessage('⚠️ Firebase is not configured. Create src/firebase.config.js from the example.', 'error');
+        showMessage(
+          "⚠️ Firebase is not configured. Create src/firebase.config.js from the example.",
+          "error"
+        );
         return;
       }
       // ✅ Register user in Firebase Auth
@@ -71,10 +74,10 @@ document
         showMessage("❌ Invalid email format", "error");
       } else if (error.code === "auth/weak-password") {
         showMessage("❌ Password should be at least 6 characters", "error");
-      } else if (error && error.code === 'auth/network-request-failed') {
+      } else if (error && error.code === "auth/network-request-failed") {
         showMessage(
-          '❌ Network error contacting Firebase. If you are using the local emulator, start it: `firebase emulators:start --only auth,firestore,functions`.',
-          'error'
+          "❌ Network error contacting Firebase. If you are using the local emulator, start it: `firebase emulators:start --only auth,firestore,functions`.",
+          "error"
         );
       } else {
         showMessage("❌ " + error.message, "error");

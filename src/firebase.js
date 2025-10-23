@@ -38,7 +38,7 @@ export async function enableEmulators(options = {}) {
     if (firebaseAvailable && shouldUseEmulator()) {
       await connectEmulators({ auth, db, ...options });
     } else {
-      console.info('Emulator connection skipped; not opted-in.');
+      console.info("Emulator connection skipped; not opted-in.");
     }
   } catch (err) {
     console.warn("Failed to connect emulators:", err);
@@ -56,10 +56,9 @@ export async function enableFunctionsEmulator(
     if (firebaseAvailable && shouldUseEmulator()) {
       await connectFunctionsEmulatorFor(functionsInstance, host, port);
     } else {
-      console.info('Functions emulator connection skipped; not opted-in.');
+      console.info("Functions emulator connection skipped; not opted-in.");
     }
   } catch (err) {
     console.warn("Failed to connect functions emulator:", err);
   }
 }
-

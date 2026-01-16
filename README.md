@@ -1,3 +1,21 @@
+# Student-Teacher Appointment Booking
+
+## Local development
+
+## Deployment (Firebase Hosting)
+
+We include a GitHub Actions workflow to deploy the `public/` folder to Firebase Hosting on pushes to `main`.
+
+Steps to enable:
+
+1. Install Firebase CLI locally and log in: `npm install -g firebase-tools` then `firebase login`
+2. Create a CI token: `firebase login:ci` and copy the generated token.
+3. In your GitHub repository settings -> Secrets -> Actions, create a secret named `FIREBASE_TOKEN` and paste the token.
+4. Update `.firebaserc`'s `default` project id to your Firebase project id or set the `FIREBASE_PROJECT` environment variable in the workflow (advanced).
+5. Push to `main` — the workflow will run and deploy `public/` to Firebase Hosting.
+
+Important: Keep the token secret. If the token is ever leaked, revoke it in Firebase console and create a new one.
+
 # 📚 Student–Teacher Booking Appointment
 
 A web-based booking system that allows students to schedule appointments with teachers, while administrators manage teachers, approve student accounts, and oversee the booking system.
@@ -5,6 +23,7 @@ A web-based booking system that allows students to schedule appointments with te
 ---
 
 ## 🚀 Features (In Progress)
+
 - ✅ Firebase Authentication (Email/Password)
 - ✅ Role-based login & redirection (Admin, Teacher, Student)
 - ✅ Registration with Firestore role storage
@@ -22,12 +41,14 @@ A web-based booking system that allows students to schedule appointments with te
 ---
 
 ## 🛠 Tech Stack
+
 **Frontend:** HTML, CSS, JavaScript  
 **Backend:** Firebase Authentication, Firebase Firestore  
 **Hosting:** Firebase Hosting (planned)  
-**Version Control:** GitHub  
+**Version Control:** GitHub
 
 ---
+
 ```bash
 ## 📂 Folder Structure
 student-teacher-booking/
@@ -63,13 +84,16 @@ student-teacher-booking/
 └── package.json
 
 ```
+
 ---
 
 ## ⚙️ Installation & Setup
+
 1. **Clone the repository**
    ```bash
    git clone https://github.com/YOUR-USERNAME/student-teacher-booking.git
    cd student-teacher-booking
+   ```
 2. **Install dependencies (if using npm)**
 
 `npm install`
@@ -93,11 +117,12 @@ student-teacher-booking/
 • Deploy (planned for later)
 
 `firebase deploy`
+
 ## 📅 Project Progress
 
 Day 1 → Firebase Auth, Registration, Login, Role-based redirection ✅
 
-Day 2 → Admin dashboard development 
+Day 2 → Admin dashboard development
 
 Day 3 → Student & Teacher dashboard connected to Firestore, booking system implemented with real-time sync ✅
 
@@ -122,9 +147,11 @@ Day 5+ →
 🔜 Upcoming → Slot conflict check, live chat system, Firebase hosting 🔜
 
 ## 📜 License
-This project is open-source under the MIT License.
-2. Commit & push:
+
+This project is open-source under the MIT License. 2. Commit & push:
+
 ```bash
 git add README.md
 git commit -m "Added initial README with current project progress"
 git push
+```

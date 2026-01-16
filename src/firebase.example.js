@@ -2,12 +2,12 @@
 // configuration. Do NOT commit `src/firebase.config.js` to your repository.
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDjNKXxv39YqpO2WLiVCJC13n_dFLbgkQs",
+  authDomain: "student-teacher-booking.firebaseapp.com",
+  projectId: "student-teacher-booking",
+  storageBucket: "student-teacher-booking.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef123456",
 };
 
 // Example usage in src/firebase.js:

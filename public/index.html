@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- Development Content Security Policy: permissive for local preview. Tighten for production. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; connect-src *; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    />
     <title>Student–Teacher Booking</title>
-    <link rel="stylesheet" href="/public/styles.css?v=7b2cbf-11" />
+    <link rel="stylesheet" href="/styles.css?v=7b2cbf-11" />
   </head>
   <body>
     <main class="hero">
@@ -47,10 +52,8 @@
                   Schedule and manage student-teacher appointments easily.
                 </p>
                 <div class="cta-row" style="margin-top: 14px">
-                  <a class="btn btn-primary" href="/src/auth/login.html"
-                    >Sign in</a
-                  >
-                  <a class="btn btn-outline" href="/src/auth/register.html"
+                  <a class="btn btn-primary" href="/auth/login.html">Sign in</a>
+                  <a class="btn btn-outline" href="/auth/register.html"
                     >Create account</a
                   >
                 </div>

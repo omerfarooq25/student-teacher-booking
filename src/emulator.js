@@ -9,7 +9,7 @@ export async function connectEmulators({
   db,
   host = "localhost",
   authPort = 9099,
-  firestorePort = 8080,
+  firestorePort = 8080
 } = {}) {
   if (!auth || !db) {
     throw new Error("connectEmulators requires { auth, db } instances");
@@ -19,7 +19,7 @@ export async function connectEmulators({
   const [{ connectAuthEmulator }, { connectFirestoreEmulator }] =
     await Promise.all([
       import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"),
-      import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"),
+      import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js")
     ]);
 
   // Connect auth emulator

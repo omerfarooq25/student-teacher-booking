@@ -8,5 +8,5 @@ export const firebaseConfig = {
   storageBucket: "student-teacher-booking-1c493.appspot.com",
   messagingSenderId: "1234567890",
   appId: "1:1234567890:web:abcdef123456",
-  measurementId: "G-ABCDEFGH",
+  measurementId: "G-ABCDEFGH"
 };

@@ -18,6 +18,6 @@ jobs:
       - name: Deploy to Firebase Hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_PROJECT: student-teacher-booking-1c493
         run: |
-          echo "Using project: $(cat .firebaserc || echo 'no .firebaserc')"
           firebase deploy --only hosting --project "$FIREBASE_PROJECT" --token "$FIREBASE_TOKEN"

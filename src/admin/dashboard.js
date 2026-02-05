@@ -1,11 +1,11 @@
 import { auth, db } from "../firebase.js";
 import {
   onAuthStateChanged,
-  signOut,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   getFunctions,
-  httpsCallable,
+  httpsCallable
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 import {
   collection,
@@ -14,7 +14,7 @@ import {
   doc,
   getDoc,
   query,
-  where,
+  where
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { showMessage } from "../utils/notification.js";
 
@@ -118,7 +118,7 @@ async function loadStats() {
   const [studentsSnap, teachersSnap, pendingSnap] = await Promise.all([
     getDocs(totalStudentsQuery),
     getDocs(totalTeachersQuery),
-    getDocs(pendingApprovalsQuery),
+    getDocs(pendingApprovalsQuery)
   ]);
 
   totalStudentsEl.textContent = studentsSnap.size;

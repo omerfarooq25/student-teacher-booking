@@ -2,7 +2,7 @@ import { auth, db, firebaseAvailable } from "../firebase.js";
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   setDoc,
-  doc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { showMessage } from "../utils/notification.js";
 
@@ -52,7 +52,7 @@ document
         name,
         email,
         role, // CHANGED: Use selected role from dropdown
-        approved: false, // All roles need admin approval
+        approved: false // All roles need admin approval
       });
       console.log("✅ Firestore document created for :", user.uid); // CHANGED: fixed log to use user.uid
 

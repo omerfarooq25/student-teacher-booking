@@ -7,7 +7,7 @@ export const firebaseConfig = {
   projectId: "student-teacher-booking",
   storageBucket: "student-teacher-booking.appspot.com",
   messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456",
+  appId: "1:1234567890:web:abcdef123456"
 };
 
 // Example usage in src/firebase.js:

@@ -15,12 +15,12 @@ export function showMessage(message, type = "info") {
   container.innerHTML = `
     <div class="message ${type}" 
          style="padding: 10px; border-radius: 5px; margin-bottom: 10px; background: ${
-           type === "success"
-             ? "#4CAF50"
-             : type === "error"
-             ? "#f44336"
-             : "#2196F3"
-         }; color: white; font-weight: bold;">
+  type === "success"
+    ? "#4CAF50"
+    : type === "error"
+      ? "#f44336"
+      : "#2196F3"
+}; color: white; font-weight: bold;">
       ${message}
     </div>
   `;

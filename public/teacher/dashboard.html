@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="teacher.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h2>Welcome, Teacher</h2>
+    <div id="messageContainer"></div>
+    <!-- Wrap Teacher's Appointment Requests -->
+    <section>
+        <h3>📥 Appointment Requests</h3>
+        <table id="appointmentsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Appointment Date/Time</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <button id="logoutBtn">Logout</button>
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>

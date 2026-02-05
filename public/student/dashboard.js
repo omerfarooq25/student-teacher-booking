@@ -1,6 +1,6 @@
 console.log("Student dashboard loaded");
 
-import { auth, db } from "../firebase.js";
+import { auth, db } from "../src/firebase.js";
 // expose auth for debugging in console
 window.auth = auth;
 

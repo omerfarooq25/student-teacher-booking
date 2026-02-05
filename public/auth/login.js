@@ -2,7 +2,7 @@ import { auth, db, firebaseAvailable } from "../../src/firebase.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   doc,
-  getDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { showMessage } from "../utils/notification.js";
 
@@ -40,11 +40,11 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       const role = docSnap.data().role;
 
       if (role === "admin") {
-        window.location.href = "../../admin/dashboard.html";
+        window.location.href = "/admin/dashboard.html";
       } else if (role === "teacher") {
-        window.location.href = "../../teacher/dashboard.html";
+        window.location.href = "/teacher/dashboard.html";
       } else {
-        window.location.href = "../../student/dashboard.html";
+        window.location.href = "/student/dashboard.html";
       }
     } else {
       alert("No role assigned to this account.");

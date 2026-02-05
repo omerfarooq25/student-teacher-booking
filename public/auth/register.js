@@ -2,7 +2,7 @@ import { auth, db, firebaseAvailable } from "../../src/firebase.js";
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   setDoc,
-  doc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { showMessage } from "../utils/notification.js";
 
@@ -48,7 +48,7 @@ document
         name,
         email,
         role,
-        approved: false,
+        approved: false
       });
 
       showMessage(
@@ -56,7 +56,7 @@ document
         "success"
       );
       setTimeout(() => {
-        window.location.href = "login.html";
+        window.location.href = "/auth/login.html";
       }, 2000);
     } catch (error) {
       console.error("Firestore write failed :", error);

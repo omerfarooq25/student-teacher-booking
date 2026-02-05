@@ -13,32 +13,52 @@ let firebaseAvailable = false;
 try {
   // Prefer a developer-provided config at `src/firebase.config.js` (one level above public)
   // so developers can keep their working config outside the public folder.
-  try {
-    const local = await import("../../src/firebase.config.js");
-    firebaseConfig = local.firebaseConfig;
-  } catch (e) {
-    // If not present, fall back to the public placeholder `public/src/firebase.config.js`
-    const pub = await import("./firebase.config.js");
-    firebaseConfig = pub.firebaseConfig;
-  }
+  (async () => {
+    try {
+      const local = await import("../../src/firebase.config.js");
+      firebaseConfig = local.firebaseConfig;
+    } catch (e) {
+      // If not present, fall back to the public placeholder `public/src/firebase.config.js`
+      const pub = await import("./firebase.config.js");
+      firebaseConfig = pub.firebaseConfig;
+    }
 
-  if (firebaseConfig) {
-    app = initializeApp(firebaseConfig);
-    _auth = getAuth(app);
-    _db = getFirestore(app);
-    firebaseAvailable = true;
-  }
+    if (firebaseConfig) {
+      app = initializeApp(firebaseConfig);
+      _auth = getAuth(app);
+      _db = getFirestore(app);
+      firebaseAvailable = true;
+    }
+  })();
 } catch (err) {
   // Don't throw. Allow the app to load so pages render — but mark Firebase unavailable.
   console.warn(
     "Firebase config not found. Create `src/firebase.config.js` by copying `src/firebase.example.js` and filling in your Firebase project values.",
-    err
+    err,
   );
 }
 
 export const auth = _auth;
 export const db = _db;
 export { firebaseAvailable };
+
+// Helper to check if emulator should be used
+function shouldUseEmulator() {
+  return false; // Disabled by default; use live Firebase
+}
+
+// Helper to connect to emulators
+async function connectEmulators({ auth, db, ...options } = {}) {
+  // Emulator connection disabled for production use
+  console.info("Emulator connection disabled");
+}
+
+// Helper to connect functions emulator
+async function connectFunctionsEmulatorFor(functionsInstance, host, port) {
+  // Emulator connection disabled for production use
+  console.info("Functions emulator connection disabled");
+}
+
 // Optional exported helper to enable local emulators programmatically.
 export async function enableEmulators(options = {}) {
   try {
@@ -57,7 +77,7 @@ export async function enableEmulators(options = {}) {
 export async function enableFunctionsEmulator(
   functionsInstance,
   host = "localhost",
-  port = 5001
+  port = 5001,
 ) {
   try {
     // Only connect functions emulator when explicitly opted-in.
